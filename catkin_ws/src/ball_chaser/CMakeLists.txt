@@ -208,9 +208,7 @@ include_directories(
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
-
-
-
+add_dependencies(ball_chaser_ ball_chaser_generate_messages_cpp)
 
 add_executable(drive_bot src/drive_bot.cpp)
 target_link_libraries(drive_bot ${catkin_LIBRARIES})
@@ -218,5 +216,5 @@ add_dependencies(drive_bot drive_bot_generate_messages_cpp)
 
 add_executable(process_image src/process_image.cpp)
 target_link_libraries(process_image ${catkin_LIBRARIES})
-add_dependencies(process_image simple_arm_generate_messages_cpp)
+add_dependencies(process_image process_image_generate_messages_cpp)
  
