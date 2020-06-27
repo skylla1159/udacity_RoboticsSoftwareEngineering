@@ -28,26 +28,39 @@ void process_image_callback(const sensor_msgs::Image img)
     uint32_t white_pos = 0;
     bool is_white = false;
 
+    // Check channels count
+    // If the image contains RGB channles, this channel_count shoud be 3.
+    uint8_t channel_count = (int)(img.step / img.width);
+
     // TODO: Loop through each pixel in the image and check if there's a bright white one
     // Then, identify if this pixel falls in the left, mid, or right side of the image
     // Depending on the white ball position, call the drive_bot function and pass velocities to it
     // Request a stop when there's no white ball seen by the camera
-    for (uint32_t i = 0; i < img.height * img.step; i++) {
-        if (img.data[i] == white_pixel) {
-            white_pos = i % img.step;
-            is_white = true;
-            break;
+    for (uint32_t pixel = 0; pixel < img.height * img.width; pixel++) 
+    {
+        for (uint8_t i = 0; i < channel_count; i++)
+        {
+            if (img.data[pixel * channel_count + i] != white_pixel) 
+            {
+                break;
+            }
+            if (i == channel_count - 1)
+            {
+                white_pos = pixel % img.width;
+                is_white = true;
+                break;
+            }
         }
     }
 
     if (is_white)
     {
         // White ball is at left in image
-        if (white_pos < img.step / 3.0)
+        if (white_pos < img.width / 3.0)
         {
             drive_robot(0, 0.5);
         // White ball is at right in image
-        }else if (white_pos > img.step * 2.0 / 3.0)
+        }else if (white_pos > img.width * 2.0 / 3.0)
         {
             drive_robot(0, -0.5);
         }else
