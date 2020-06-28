@@ -3,7 +3,18 @@
 <robot name="my_robot" 
   xmlns:xacro="http://www.ros.org/wiki/xacro">
   <xacro:include filename="$(find my_robot)/urdf/my_robot.gazebo" />
-
+  <material name="red">
+    <color rgba="0.92 0.09 0.09 1"/>
+  </material>
+  <material name="grey">
+    <color rgba="0.2 0.2 0.2 1"/>
+  </material>
+  <material name="blue">
+    <color rgba="0.13 0.65 0.70 1"/>
+  </material>
+  <material name="skyblue">
+    <color rgba="0.49 0.84 0.87 1"/>
+  </material>
   <link name="robot_footprint"></link>
 
   <joint name="robot_footprint_joint" type="fixed">
@@ -33,6 +44,7 @@
       <geometry>
         <box size=".4 .2 .1"/>
       </geometry>
+      <material name="blue"/>
     </visual>
 
 
@@ -48,6 +60,7 @@
       <geometry>
         <sphere radius="0.05"/>
       </geometry>
+      <material name="red"/>
     </visual>
 
     <collision name='front_caster_collision'>
@@ -62,6 +75,7 @@
       <geometry>
         <sphere radius="0.05"/>
       </geometry>
+      <material name="red"/>
     </visual>
 
   </link>
@@ -97,6 +111,7 @@
       <geometry>
         <cylinder radius="0.1" length="0.05"/>
       </geometry>
+      <material name="gray"/>
     </visual>
   </link>
 
@@ -131,6 +146,7 @@
       <geometry>
         <cylinder radius="0.1" length="0.05"/>
       </geometry>
+      <material name="gray"/>
     </visual>
   </link>
 
@@ -196,12 +212,53 @@
     </visual>
   </link>
 
-  <joint name="camera_optical_joint" type="fixed">
-    <origin xyz="0 0 0" rpy="-1.5707 0 -1.5707"/>
-    <parent link="camera"/>
-    <child link="camera_link_optical"/>
+  <!-- For Accesory -->
+  <joint type="fixed" name="acc_01_joint">
+    <origin xyz="-0.2 0.1 0.1" rpy="0 0 0"/>
+    <child link="acc_01"/>
+    <parent link="chassis"/>
+    <axis xyz="0 1 0" rpy="0 0 0"/>
   </joint>
 
-  <link name="camera_link_optical">
+  <link name="acc_01">
+    <pose>0 0 0 0 0 0</pose>
+    <inertial>
+      <mass value="0.1"/>
+      <origin xyz="0 0 0" rpy=" 0 0 0"/>
+      <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6" />
+    </inertial>
+
+    <visual name='acc_01_visual'>
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 0 0"/>
+      <geometry>
+        <cylinder radius="0.01" length="0.2"/>
+      </geometry>
+      <material name="skyblue"/>
+    </visual>
+  </link>
+
+  <!-- For Accesory -->
+  <joint type="fixed" name="acc_02_joint">
+    <origin xyz="-0.2 -0.1 0.1" rpy="0 0 0"/>
+    <child link="acc_02"/>
+    <parent link="chassis"/>
+    <axis xyz="0 1 0" rpy="0 0 0"/>
+  </joint>
+
+  <link name="acc_02">
+    <pose>0 0 0 0 0 0</pose>
+    <inertial>
+      <mass value="0.1"/>
+      <origin xyz="0 0 0" rpy=" 0 0 0"/>
+      <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6" />
+    </inertial>
+
+    <visual name='acc_02_visual'>
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 0 0"/>
+      <geometry>
+        <cylinder radius="0.01" length="0.2"/>
+      </geometry>
+      <material name="skyblue"/>
+    </visual>
   </link>
 </robot>
