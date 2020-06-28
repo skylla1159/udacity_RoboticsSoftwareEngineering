@@ -9,7 +9,7 @@ ros::ServiceClient client;
 void drive_robot(float lin_x, float ang_z)
 {
     // TODO: Request a service and pass the velocities to it to drive the robot
-    ROS_INFO_STREAM("Moving the arm to the center");
+    ROS_INFO_STREAM("Moving the robot to the ball");
 
     ball_chaser::DriveToTarget srv;
     srv.request.linear_x = lin_x;
@@ -23,7 +23,9 @@ void drive_robot(float lin_x, float ang_z)
 // This callback function continuously executes and reads the image data
 void process_image_callback(const sensor_msgs::Image img)
 {
-
+    ROS_INFO("Image Height : %d", img.height);
+    ROS_INFO("Image Width  : %d", img.width);
+    ROS_INFO("Image Step   : %d", img.step);
     uint8_t white_pixel = 255;
     uint32_t white_pos = 0;
     bool is_white = false;
@@ -38,20 +40,32 @@ void process_image_callback(const sensor_msgs::Image img)
     // Request a stop when there's no white ball seen by the camera
     for (uint32_t pixel = 0; pixel < img.height * img.width; pixel++) 
     {
+        // Check all channels
         for (uint8_t i = 0; i < channel_count; i++)
         {
+            // If the pixel is not 255, exit loop and go to next pixel
             if (img.data[pixel * channel_count + i] != white_pixel) 
             {
                 break;
             }
+            // If all channels is 255, make is_white flag true
             if (i == channel_count - 1)
             {
                 white_pos = pixel % img.width;
                 is_white = true;
-                break;
+                ROS_INFO("Found Ball!");
+                ROS_INFO("Array   count : %d", pixel * channel_count + i);
+                ROS_INFO("Pixel   count : %d", pixel);
+                ROS_INFO("i       count : %d", i);
+                ROS_INFO("white_pos     : %d", white_pos);
             }
         }
+        if (is_white)
+        {
+            break;
+        }
     }
+    
 
     if (is_white)
     {
